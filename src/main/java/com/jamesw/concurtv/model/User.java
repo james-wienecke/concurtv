@@ -2,6 +2,8 @@ package com.jamesw.concurtv.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -30,10 +32,19 @@ public class User {
     @Column(name = "token_expired")
     private boolean tokenExpired;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
+
     public User() {
     }
 
-    public User(long id, String email, String username, String password, Timestamp createdAt, boolean enabled, boolean tokenExpired) {
+    public User(long id, String email, String username, String password, Timestamp createdAt, boolean enabled, boolean tokenExpired, List<Role> roles) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -41,6 +52,7 @@ public class User {
         this.createdAt = createdAt;
         this.enabled = enabled;
         this.tokenExpired = tokenExpired;
+        this.roles = roles;
     }
 
     public long getId() {
@@ -97,5 +109,13 @@ public class User {
 
     public void setTokenExpired(boolean tokenExpired) {
         this.tokenExpired = tokenExpired;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
